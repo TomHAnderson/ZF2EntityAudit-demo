@@ -8,11 +8,8 @@
 	    "doctrine/doctrine-orm-module": "dev-master",
         "zendframework/zend-developer-tools":"dev-master",
         "simplethings/entity-audit-bundle": "dev-master",
-        "tawfekov/zf2entityaudit": "dev-master",
-	    "zf-commons/zfc-base": "dev-master",
-	    "zf-commons/zfc-user": "dev-master",
-	    "socalnick/scn-social-auth": "dev-master",
-	    "socalnick/scn-social-auth-doctrine-orm" : "dev-master",
+        "tawfekov/zf2entityaudit-tha": "dev-master",
+	    "zf-commons/zfc-user": "0.1.1",
 	    "hybridauth/hybridauth": "dev-master",
 	    "zf-commons/zfc-user-doctrine-orm": "dev-master"
     }

@@ -35,6 +35,7 @@
                     <div class="nav-collapse">
                         <ul class="nav pull-right">
                             <?php
+
                             if ($this->zfcUserIdentity()) {
                             ?>
                             <li id="user-menu" class="dropdown">
@@ -59,7 +60,7 @@
 
                         <ul class="nav">
                             <li><a href="<?php echo $this->url('application') ?>"><i class="icon-home"></i> Home</a></li>
-                            <li><a href="<?php echo $this->url('audit_index') ?>"><i class="icon-edit"></i> Audit Revisions</a></li>
+                            <li><a href="<?php echo $this->url('audit') ?>"><i class="icon-edit"></i> Audit Revisions</a></li>
                             <li><a href="https://github.com/tawfekov/ZF2EntityAudit"><i class="icon-book"></i> Source Code</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
