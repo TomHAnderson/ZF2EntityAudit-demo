@@ -7,7 +7,6 @@
         "zendframework/zendframework": "2.*",
 	    "doctrine/doctrine-orm-module": "dev-master",
         "zendframework/zend-developer-tools":"dev-master",
-        "simplethings/entity-audit-bundle": "dev-master",
         "tawfekov/zf2entityaudit-tha": "dev-master",
 	    "zf-commons/zfc-user": "0.1.1",
 	    "hybridauth/hybridauth": "dev-master",

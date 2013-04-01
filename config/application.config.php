@@ -7,10 +7,11 @@ return array(
         'ZendDeveloperTools',
         'ZfcBase',
         'ZfcUser',
-	'ZfcUserDoctrineORM',
+        'ZfcUserDoctrineORM',
         //'ScnSocialAuth',
         //'ScnSocialAuthDoctrineORM',
-	'ZF2EntityAudit'
+
+        'ZF2EntityAudit'
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
