@@ -8,6 +8,8 @@
 
         <?= $this->formRow($form->get('tag')); ?>
 
+        <?= $this->formRow($form->get('revisionComment')); ?>
+
         <br>
 
         <?= $this->formInput(
@@ -19,15 +21,7 @@
                 )
             ); ?>
 
-        <a class="btn btn-danger confirm"
-            href="<?=
-            $this->url('edit' ,
-                array(
-                    'controller' => 'index' ,
-                    'action' => 'delete' ,
-                    'id' => $type->getId()
-                )
-            ); ?>">Delete</a>
+        <a class="btn btn-danger delete" href="#">Delete</a>
 
         <?= $this->form()->closeTag($form); ?>
     </div>
@@ -36,8 +30,17 @@
 <script>
 
 $(function() {
-    $('.confirm').on('click', function(event) {
-        return confirm('Are you sure?');
+    $('.delete').on('click', function(event) {
+        if (!confirm('Are you sure?')) return;
+
+        window.document.location = "<?= $this->url('edit' ,
+                array(
+                    'controller' => 'index' ,
+                    'action' => 'delete' ,
+                    'id' => $type->getId()
+                )); ?>?revisionComment=" + encodeURIComponent($('[name="revisionComment"]').val());
+
+
     });
 });
 

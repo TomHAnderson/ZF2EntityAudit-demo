@@ -1,84 +1,109 @@
 <?php
 
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\AbstractActionController
+    , Zend\View\Model\ViewModel
+    , Application\Form\Type as TypeForm
+    , Application\Entity\Type as TypeEntity
+    ;
 
 class IndexController extends AbstractActionController {
 
-    public function indexAction() {
+    public function indexAction()
+    {
+        $entityManager = $this->getServiceLocator()->get("doctrine.entitymanager.orm_default");
 
-        $sm = $this->getServiceLocator();
-        $em = $sm->get("doctrine.entitymanager.orm_default");
-        $type_form = new \Application\Form\Type();
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $type = new \Application\Entity\Type();
-            $type_form->setInputFilter($type->getInputFilter());
-            $type_form->setData($request->getPost());
-            if ($type_form->isValid()) {
-                $type->exchangeArray($type_form->getData());
-                $em->persist($type);
-                $em->flush();
+        $typeForm = new TypeForm();
+
+        if ($this->getRequest()->isPost()) {
+            $typeEntity = new TypeEntity();
+            $typeForm->setInputFilter($typeEntity->getInputFilter());
+            $typeForm->setData($this->getRequest()->getPost());
+
+            if ($typeForm->isValid()) {
+                $typeEntity->exchangeArray($typeForm->getData());
+                // Set the revision comment before flushing
+                $formData = $typeForm->getData();
+                if ($formData['revisionComment'])
+                    $this->getServiceLocator()
+                        ->get('auditComment')
+                        ->setComment($formData['revisionComment']);
+
+                $entityManager->persist($typeEntity);
+                $entityManager->flush();
+
                 return $this->redirect()->toUrl("/");
             }
         }
-        $records = $em->getRepository("Application\Entity\Type")->findAll();
+
         return new ViewModel(array(
-            "records" => $records,
-            "form" => $type_form
+            "records" => $entityManager->getRepository("Application\Entity\Type")->findAll(),
+            "form" => $typeForm
         ));
     }
 
-    public function editAction() {
+    public function editAction()
+    {
         if (!$this->zfcUserAuthentication()->hasIdentity()) {
             return $this->redirect()->toRoute('zfcuser/login');
         }
 
         $id = (int) $this->getEvent()->getRouteMatch()->getParam('id');
-        $sm = $this->getServiceLocator();
-        $em = $sm->get("doctrine.entitymanager.orm_default");
-        $type = $em->getRepository("Application\Entity\Type")->find($id);
+        $entityManager = $this->getServiceLocator()->get("doctrine.entitymanager.orm_default");
+        $type = $entityManager->getRepository("Application\Entity\Type")->find($id);
 
-        $type_form = new \Application\Form\Type();
-        $type_form->bind($type);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $type_form->setInputFilter($type->getInputFilter());
-            $type_form->setData($request->getPost());
-            if ($type_form->isValid()) {
-                $type->exchangeArray($type_form->getData()->getArrayCopy());
-                $em->persist($type);
-                $em->flush();
-                return $this->redirect()->toUrl("/");
+        $typeForm = new TypeForm();
+        $typeForm->bind($type);
+        if ($this->getRequest()->isPost()) {
+            $typeForm->setInputFilter($type->getInputFilter());
+            $typeForm->setData($this->getRequest()->getPost());
+            if ($typeForm->isValid()) {
+                $type->exchangeArray($typeForm->getData()->getArrayCopy());
+
+                // Set the revision comment before flushing
+                $revisionComment = $this->getRequest()->getPost()->get('revisionComment');
+                if ($revisionComment)
+                    $this->getServiceLocator()
+                        ->get('auditComment')
+                        ->setComment($revisionComment);
+
+                $entityManager->persist($type);
+                $entityManager->flush();
+                return $this->redirect()->toUrl('/');
             }
         }
 
         return new ViewModel(array(
-            'form' => $type_form,
+            'form' => $typeForm,
             'type' => $type,
         ));
     }
 
-    public function deleteAction() {
-        $id = (int) $this->getEvent()->getRouteMatch()->getParam('id');
+    public function deleteAction()
+    {
+        $id = (int)$this->getEvent()->getRouteMatch()->getParam('id');
 
-        $em = $this->getServiceLocator()->get("doctrine.entitymanager.orm_default");
+        $entityManager = $this->getServiceLocator()->get("doctrine.entitymanager.orm_default");
 
-        $type = $em->getRepository("Application\Entity\Type")->find($id);
-        if ($type) $em->remove($type);
+        $type = $entityManager->getRepository("Application\Entity\Type")->find($id);
 
-        $em->flush();
+        if ($type) {
+            // Set the revision comment before flushing
+            $revisionComment = $this->getRequest()->getQuery()->get('revisionComment');
+            if ($revisionComment)
+                $this->getServiceLocator()
+                    ->get('auditComment')
+                    ->setComment($revisionComment);
 
-        return $this->redirect()->toUrl("/");
+#        die($revisionComment);
+
+            $entityManager->remove($type);
+            $entityManager->flush();
+        }
+
+
+
+        return $this->redirect()->toUrl('/');
     }
 }

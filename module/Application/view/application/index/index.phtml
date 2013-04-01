@@ -25,32 +25,29 @@
     <div class="span6">
         <?php if (!$this->zfcUserIdentity()): ?>
             <!-- display the login form -->
-            <?php echo $this->zfcUserLoginWidget(); ?>
+            <?= $this->zfcUserLoginWidget(); ?>
 
             <div class="alert alert-error">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 <p>Sign in to add sample data</p>
             </div>
+
             <?php else: ?>
             <h1>Add Sample Data</h1>
             <!-- display the 'display name' of the user -->
-            <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
-             <?php echo $this->form()->openTag($form); ?>
-            <?php echo $this->formLabel($form->get('name')); ?>
-            <?php echo $this->formInput($form->get('name')); ?>
-            <?php echo $this->formElementErrors($form->get('name')); ?>
 
+            <?= $this->form()->openTag($form); ?>
 
-            <?php echo $this->formLabel($form->get('tag')); ?>
-            <?php echo $this->formInput($form->get('tag')); ?>
-            <?php echo $this->formElementErrors($form->get('tag')); ?>
+            <?= $this->formRow($form->get('name')); ?>
 
-            <?php echo $this->formLabel($form->get('save')); ?>
-            <?php echo $this->formInput($form->get('save')); ?>
+            <?= $this->formRow($form->get('tag')); ?>
 
-            <?php
-            echo $this->form()->closeTag($form);
-            ?>
+            <?= $this->formRow($form->get('revisionComment')); ?>
+
+            <?= $this->formRow($form->get('save')); ?>
+
+            <?= $this->form()->closeTag($form); ?>
+
         <?php endif ?>
     </div>
 </div>

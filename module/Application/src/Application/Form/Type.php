@@ -25,10 +25,21 @@ class Type extends Form {
             'name' => 'tag',
             'attributes' => array(
                 'type' => 'text',
-                'id' => "tag"
+                'id' => 'tag',
             ),
             "options" => array(
                 'label' => 'Tag',
+            )
+        ));
+
+        $this->add(array(
+            'name' => 'revisionComment',
+            'attributes' => array(
+                'type' => 'textarea',
+                'id' => 'revisionComment',
+            ),
+            "options" => array(
+                'label' => 'Revision Comment',
             )
         ));
 
