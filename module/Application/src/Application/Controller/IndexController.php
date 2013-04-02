@@ -27,7 +27,7 @@ class IndexController extends AbstractActionController {
                 $formData = $typeForm->getData();
                 if ($formData['revisionComment'])
                     $this->getServiceLocator()
-                        ->get('auditComment')
+                        ->get('auditService')
                         ->setComment($formData['revisionComment']);
 
                 $entityManager->persist($typeEntity);
@@ -65,7 +65,7 @@ class IndexController extends AbstractActionController {
                 $revisionComment = $this->getRequest()->getPost()->get('revisionComment');
                 if ($revisionComment)
                     $this->getServiceLocator()
-                        ->get('auditComment')
+                        ->get('auditService')
                         ->setComment($revisionComment);
 
                 $entityManager->persist($type);
@@ -93,7 +93,7 @@ class IndexController extends AbstractActionController {
             $revisionComment = $this->getRequest()->getQuery()->get('revisionComment');
             if ($revisionComment)
                 $this->getServiceLocator()
-                    ->get('auditComment')
+                    ->get('auditService')
                     ->setComment($revisionComment);
 
 #        die($revisionComment);
